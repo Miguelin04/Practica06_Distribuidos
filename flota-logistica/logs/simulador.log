@@ -1,0 +1,25 @@
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/mqtt-parte1/simulador.py:90: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client(client_id="simulador-flota", protocol=mqtt.MQTTv311)
+[SIMULADOR] Conectando a Mosquitto…
+Traceback (most recent call last):
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/mqtt-parte1/simulador.py", line 117, in <module>
+    main()
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/mqtt-parte1/simulador.py", line 95, in main
+    client.connect(MQTT_HOST, MQTT_PORT, MQTT_KEEPALIVE)
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/.venv/lib/python3.12/site-packages/paho/mqtt/client.py", line 1435, in connect
+    return self.reconnect()
+           ^^^^^^^^^^^^^^^^
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/.venv/lib/python3.12/site-packages/paho/mqtt/client.py", line 1598, in reconnect
+    self._sock = self._create_socket()
+                 ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/.venv/lib/python3.12/site-packages/paho/mqtt/client.py", line 4609, in _create_socket
+    sock = self._create_socket_connection()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/.venv/lib/python3.12/site-packages/paho/mqtt/client.py", line 4640, in _create_socket_connection
+    return socket.create_connection(addr, timeout=self._connect_timeout, source_address=source)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 852, in create_connection
+    raise exceptions[0]
+  File "/usr/lib/python3.12/socket.py", line 837, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused

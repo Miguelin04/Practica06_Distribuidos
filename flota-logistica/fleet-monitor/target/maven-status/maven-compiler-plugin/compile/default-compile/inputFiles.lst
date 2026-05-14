@@ -1,0 +1,7 @@
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/consumer/AlertConsumer.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/controller/FleetController.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/model/GpsMessage.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/consumer/GpsConsumer.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/repository/GpsMessageRepository.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/FleetMonitorApplication.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica 06/flota-logistica/fleet-monitor/src/main/java/edu/ape006/fleetmonitor/config/RabbitMQConfig.java
