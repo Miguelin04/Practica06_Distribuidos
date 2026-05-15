@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fleet Monitor — APE-05/06</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <!-- ── SIDEBAR ──────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="logo">
+      <span class="logo-icon">🚛</span>
+      <span class="logo-text">Fleet<b>Monitor</b></span>
+    </div>
+    <nav class="nav">
+      <a class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
+        <span>📊</span> Dashboard
+      </a>
+      <a class="nav-item" data-view="vehiculos" onclick="showView('vehiculos')">
+        <span>🚚</span> Vehículos
+      </a>
+      <a class="nav-item" data-view="alertas" onclick="showView('alertas')">
+        <span>⚠️</span> Alertas
+        <span class="badge" id="badge-alertas">0</span>
+      </a>
+      <a class="nav-item" data-view="mapa" onclick="showView('mapa')">
+        <span>🗺️</span> Mapa GPS
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="status-dot" id="system-dot"></div>
+      <span id="system-status">Conectando...</span>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────────────────── -->
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h1 id="view-title">Dashboard</h1>
+        <p class="subtitle">APE-05/06 — Monitoreo de Flota Logística en tiempo real</p>
+      </div>
+      <div class="topbar-right">
+        <span class="chip">MQTT → RabbitMQ → Spring Boot</span>
+        <span id="last-update" class="update-time">--</span>
+        <button class="btn-refresh" onclick="fetchAll()">↻ Actualizar</button>
+      </div>
+    </header>
+
+    <!-- ── VIEW: DASHBOARD ────────────────────────────────────── -->
+    <section id="view-dashboard" class="view active">
+      <!-- KPI cards -->
+      <div class="cards-grid">
+        <div class="card card-blue">
+          <div class="card-icon">🚚</div>
+          <div class="card-info">
+            <span class="card-label">Vehículos Activos</span>
+            <span class="card-value" id="kpi-vehiculos">—</span>
+          </div>
+        </div>
+        <div class="card card-green">
+          <div class="card-icon">📡</div>
+          <div class="card-info">
+            <span class="card-label">Mensajes GPS</span>
+            <span class="card-value" id="kpi-gps">—</span>
+          </div>
+        </div>
+        <div class="card card-orange">
+          <div class="card-icon">🌡️</div>
+          <div class="card-info">
+            <span class="card-label">Alertas Temperatura</span>
+            <span class="card-value" id="kpi-temp-alert">—</span>
+          </div>
+        </div>
+        <div class="card card-red">
+          <div class="card-icon">⛽</div>
+          <div class="card-info">
+            <span class="card-label">Alertas Combustible</span>
+            <span class="card-value" id="kpi-fuel-alert">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Última posición tabla -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>📍 Última posición de la flota</h2>
+        </div>
+        <div class="table-wrap">
+          <table id="tabla-posicion">
+            <thead>
+              <tr>
+                <th>Vehículo</th><th>Latitud</th><th>Longitud</th>
+                <th>Velocidad (km/h)</th><th>Recibido</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-posicion">
+              <tr><td colspan="5" class="empty">Cargando datos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Log en vivo -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2>📟 Log en vivo (pipeline completo)</h2>
+          <button class="btn-sm" onclick="clearLog()">Limpiar</button>
+        </div>
+        <div class="log-box" id="live-log">
+          <p class="log-entry log-info">[SISTEMA] Esperando datos del pipeline MQTT → RabbitMQ → Spring Boot...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW: VEHÍCULOS ────────────────────────────────────── -->
+    <section id="view-vehiculos" class="view">
+      <div id="vehiculos-grid" class="vehiculos-grid">
+        <p class="empty">Selecciona un vehículo para ver su telemetría</p>
+      </div>
+    </section>
+
+    <!-- ── VIEW: ALERTAS ─────────────────────────────────────── -->
+    <section id="view-alertas" class="view">
+      <div class="panel">
+        <div class="panel-header"><h2>🌡️ Alertas de Temperatura (&gt; 4°C)</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vehículo</th><th>Temperatura</th><th>Alerta</th><th>Timestamp</th></tr></thead>
+            <tbody id="tbody-temp-alertas"><tr><td colspan="4" class="empty">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>⛽ Alertas de Combustible (&lt; 20%)</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Vehículo</th><th>Nivel (%)</th><th>Alerta</th><th>Timestamp</th></tr></thead>
+            <tbody id="tbody-fuel-alertas"><tr><td colspan="4" class="empty">Cargando...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW: MAPA ─────────────────────────────────────────── -->
+    <section id="view-mapa" class="view">
+      <div class="panel">
+        <div class="panel-header"><h2>🗺️ Posición GPS — Área Guayaquil</h2></div>
+        <canvas id="mapa-canvas" width="900" height="480"></canvas>
+        <div id="mapa-leyenda" class="mapa-leyenda"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

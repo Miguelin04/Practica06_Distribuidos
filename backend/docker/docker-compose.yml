@@ -1,0 +1,51 @@
+# ─── APE-006 Flota Logística — Infraestructura de mensajería ──────────────────
+# Levanta Mosquitto (MQTT) y RabbitMQ en un solo comando:
+#   docker compose -f docker/docker-compose.yml up -d
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── Broker MQTT ─────────────────────────────────────────────────────────────
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: mosquitto-flota
+    ports:
+      - "1883:1883"          # MQTT estándar (sin TLS)
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    restart: unless-stopped
+    networks:
+      - flota-net
+
+  # ── Broker AMQP ─────────────────────────────────────────────────────────────
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-flota
+    ports:
+      - "5672:5672"          # AMQP — conexiones de clientes
+      - "15672:15672"        # Panel web de administración
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    restart: unless-stopped
+    networks:
+      - flota-net
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics check_port_connectivity -q 2>/dev/null || exit 1"]
+      interval: 10s
+      timeout: 8s
+      retries: 15
+      start_period: 30s
+
+# ─── Volúmenes persistentes ───────────────────────────────────────────────────
+volumes:
+  rabbitmq_data:
+    name: flota_rabbitmq_data
+
+# ─── Red interna compartida ───────────────────────────────────────────────────
+networks:
+  flota-net:
+    name: flota-net
+    driver: bridge

@@ -1,4 +1,4 @@
- APE-006 — Mensajería Distribuida: Flota Logística 🚛
+# APE-006 — Mensajería Distribuida: Flota Logística 🚛
 
 ## Arquitectura del Sistema
 

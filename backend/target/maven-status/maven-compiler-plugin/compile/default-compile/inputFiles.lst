@@ -1,0 +1,15 @@
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/model/GpsData.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/repository/TempRepository.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/model/FuelData.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/mqtt/MqttSubscriber.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/model/TempData.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/FleetMonitorApplication.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/consumer/GpsConsumer.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/repository/FuelRepository.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/config/RabbitMQConfig.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/controller/FleetController.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/mqtt/MqttBridge.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/config/MqttConfig.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/repository/GpsRepository.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/consumer/AlertConsumer.java
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/src/main/java/com/fleet/monitor/simulator/SensorSimulator.java
