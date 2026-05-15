@@ -33,10 +33,10 @@ public class GpsConsumer {
     @RabbitListener(queues = RabbitMQConfig.COLA_GPS)
     public void consumirGps(Map<String, Object> datos) {
         try {
-            String vehiculoId = (String) datos.getOrDefault("vehiculo_id", "DESCONOCIDO");
+            String vehiculoId = (String) datos.getOrDefault("vehiculoId", "DESCONOCIDO");
             double latitud    = toDouble(datos.get("latitud"));
             double longitud   = toDouble(datos.get("longitud"));
-            double velocidad  = toDouble(datos.get("velocidad_kmh"));
+            double velocidad  = toDouble(datos.get("velocidadKmh"));
 
             GpsData gps = new GpsData(vehiculoId, latitud, longitud, velocidad);
             gpsRepo.save(gps);

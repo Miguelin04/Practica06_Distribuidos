@@ -1,0 +1,2 @@
+/home/miguel/Escritorio/Sistemas Distribuidos/Practica06/Practica06_Distribuidos/backend/py/simulator.py:11: DeprecationWarning: Callback API version 1 is deprecated, update to latest version
+  client = mqtt.Client()

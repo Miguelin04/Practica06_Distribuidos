@@ -14,11 +14,11 @@ import org.springframework.context.annotation.Configuration;
  * Define el exchange Direct, las 4 colas durables y sus bindings.
  * Arquitectura del exchange.fleet:
  *
- *   exchange.fleet (Direct)
- *   ├─ gps.routing  → cola.gps
- *   ├─ temp.alert   → cola.temperatura
- *   ├─ temp.alert   → cola.notificaciones  (fan-out de alertas de temperatura)
- *   └─ fuel.routing → cola.combustible
+ * exchange.fleet (Direct)
+ * ├─ gps.routing → cola.gps.telemetria
+ * ├─ temp.alert → cola.alertas.temperatura
+ * ├─ temp.alert → cola.notificaciones (fan-out de alertas de temperatura)
+ * └─ fuel.routing → cola.combustible.nivel
  *
  * Se crea PRIMERO: GpsConsumer y AlertConsumer dependen de las
  * constantes aquí definidas para escuchar las colas correctas.
@@ -27,18 +27,18 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     // ── Nombre del exchange ────────────────────────────────────────────────────
-    public static final String EXCHANGE_FLEET       = "exchange.fleet";
+    public static final String EXCHANGE_FLEET = "exchange.fleet";
 
     // ── Nombres de las colas ──────────────────────────────────────────────────
-    public static final String COLA_GPS             = "cola.gps";
-    public static final String COLA_TEMPERATURA     = "cola.temperatura";
-    public static final String COLA_COMBUSTIBLE     = "cola.combustible";
-    public static final String COLA_NOTIFICACIONES  = "cola.notificaciones";
+    public static final String COLA_GPS = "cola.gps.telemetria";
+    public static final String COLA_TEMPERATURA = "cola.alertas.temperatura";
+    public static final String COLA_COMBUSTIBLE = "cola.combustible.nivel";
+    public static final String COLA_NOTIFICACIONES = "cola.notificaciones";
 
     // ── Routing keys ──────────────────────────────────────────────────────────
-    public static final String RK_GPS              = "gps.routing";
-    public static final String RK_TEMP             = "temp.alert";
-    public static final String RK_FUEL             = "fuel.routing";
+    public static final String RK_GPS = "gps.routing";
+    public static final String RK_TEMP = "temp.alert";
+    public static final String RK_FUEL = "fuel.routing";
 
     // ── Exchange Direct durable ───────────────────────────────────────────────
     @Bean
@@ -47,10 +47,25 @@ public class RabbitMQConfig {
     }
 
     // ── Colas durables ────────────────────────────────────────────────────────
-    @Bean public Queue colaGps()            { return QueueBuilder.durable(COLA_GPS).build(); }
-    @Bean public Queue colaTemperatura()    { return QueueBuilder.durable(COLA_TEMPERATURA).build(); }
-    @Bean public Queue colaCombustible()    { return QueueBuilder.durable(COLA_COMBUSTIBLE).build(); }
-    @Bean public Queue colaNotificaciones() { return QueueBuilder.durable(COLA_NOTIFICACIONES).build(); }
+    @Bean
+    public Queue colaGps() {
+        return QueueBuilder.durable(COLA_GPS).build();
+    }
+
+    @Bean
+    public Queue colaTemperatura() {
+        return QueueBuilder.durable(COLA_TEMPERATURA).build();
+    }
+
+    @Bean
+    public Queue colaCombustible() {
+        return QueueBuilder.durable(COLA_COMBUSTIBLE).build();
+    }
+
+    @Bean
+    public Queue colaNotificaciones() {
+        return QueueBuilder.durable(COLA_NOTIFICACIONES).build();
+    }
 
     // ── Bindings: cola ←→ exchange vía routing key ────────────────────────────
     @Bean

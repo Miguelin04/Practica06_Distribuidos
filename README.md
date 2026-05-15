@@ -1,105 +1,72 @@
-# APE-006 — Mensajería Distribuida: Flota Logística 🚛
+# APE-05/06 — Mensajería Distribuida: Flota Logística (Versión Python) 🚛
 
-## Arquitectura del Sistema
+## Arquitectura del Sistema (Migrada a Python)
+
+El sistema ha sido migrado de Spring Boot a una arquitectura **Python de alto rendimiento** utilizando FastAPI, garantizando una interfaz interactiva y ligera.
 
 ```
-Simulador Python → MQTT (Mosquitto:1883) → Bridge Python → RabbitMQ (5672) → Spring Boot → API REST
+Simulador (Python) → MQTT (Mosquitto:1883) → Bridge (Python) → RabbitMQ (5672) → FastAPI (Python) → Dashboard Moderno
 ```
 
-### Exchange y colas RabbitMQ
+### Componentes Clave
 
-| Routing Key   | Cola destino         | Consumidor          |
-|---------------|----------------------|---------------------|
-| `gps.routing` | `cola.gps`           | `GpsConsumer.java`  |
-| `temp.alert`  | `cola.temperatura`   | `AlertConsumer.java`|
-| `temp.alert`  | `cola.notificaciones`| (binding doble)     |
-| `fuel.routing`| `cola.combustible`   | (monitoreo)         |
+1.  **Backend (FastAPI)**: Servidor REST que centraliza la simulación, el puenteo de mensajes y la persistencia en SQLite.
+2.  **Dashboard Moderno**: Interfaz web rediseñada con un tema claro, tipografía moderna (Outfit) y animaciones fluidas.
+3.  **Persistence**: Los mensajes se filtran por RabbitMQ y se guardan en una base de datos local `fleet.db`.
 
 ---
 
-## Estructura del proyecto
+## Estructura del Proyecto
 
 ```
-flota-logistica/
-├── docker/
-│   ├── docker-compose-mqtt.yml
-│   ├── docker-compose-rabbitmq.yml
-│   └── mosquitto.conf
-├── mqtt-parte1/
-│   ├── simulador.py    ← Genera telemetría de 3 vehículos
-│   ├── suscriptor.py   ← Escucha flota/# y guarda en SQLite
-│   └── bridge.py       ← Reenvía MQTT→RabbitMQ
-├── fleet-monitor/      ← Proyecto Spring Boot
-│   ├── pom.xml
-│   └── src/main/java/edu/ape006/fleetmonitor/
-│       ├── config/RabbitMQConfig.java
-│       ├── model/GpsMessage.java
-│       ├── repository/GpsMessageRepository.java
-│       ├── consumer/GpsConsumer.java
-│       ├── consumer/AlertConsumer.java
-│       └── controller/FleetController.java
-├── start.sh
-└── stop.sh
+Practica06_Distribuidos/
+├── backend/
+│   ├── py/
+│   │   ├── main.py         ← FastAPI + Orquestación de threads
+│   │   ├── models.py       ← Esquema de Base de Datos (SQLAlchemy)
+│   │   ├── simulator.py    ← Generador de telemetría (MQTT)
+│   │   ├── bridge.py       ← Puente MQTT → RabbitMQ
+│   │   ├── consumers.py    ← Consumidores RabbitMQ → SQLite
+│   │   └── requirements.txt
+├── frontend/
+│   ├── index.html
+│   ├── style.css       ← Nuevo diseño Light Mode
+│   └── app.js
+├── backend/docker/      ← Infraestructura Mosquitto/RabbitMQ
+├── start.sh            ← Arranque automatizado
+├── stop.sh             ← Detención limpia
+└── status.sh           ← Monitor interactivo (no negro)
 ```
 
 ---
 
-## Orden de arranque
+## Cómo Ejecutar
 
 ```bash
-# 1. Instalar dependencias Python (una sola vez)
-pip install paho-mqtt pika
+# 1. Dar permisos de ejecución
+chmod +x start.sh stop.sh status.sh
 
-# 2. Arranque completo (respeta el orden de la guía)
-chmod +x start.sh stop.sh
+# 2. Iniciar todo el sistema
 ./start.sh
 
-# 3. Para detener todo
-./stop.sh
+# 3. Monitorear el estado (Modo Interactivo)
+./status.sh
 ```
 
-### Arranque manual (paso a paso)
+### Accesos Rápidos
 
-```bash
-# Terminal 1 — RabbitMQ
-docker compose -f docker/docker-compose-rabbitmq.yml up
-
-# Terminal 2 — Mosquitto
-docker compose -f docker/docker-compose-mqtt.yml up
-
-# Terminal 3 — Spring Boot (esperar a que RabbitMQ esté listo)
-cd fleet-monitor && mvn spring-boot:run
-
-# Terminal 4 — Bridge
-python3 mqtt-parte1/bridge.py
-
-# Terminal 5 — Suscriptor
-python3 mqtt-parte1/suscriptor.py
-
-# Terminal 6 — Simulador
-python3 mqtt-parte1/simulador.py
-```
+- **Dashboard**: [http://localhost:8081](http://localhost:8081)
+- **Documentación API (Swagger)**: [http://localhost:8082/docs](http://localhost:8082/docs)
+- **Panel RabbitMQ**: [http://localhost:15672](http://localhost:15672) (admin / admin123)
 
 ---
 
-## Endpoints de la API REST
+## Mejoras Implementadas
 
-| Método | URL                              | Descripción                          |
-|--------|----------------------------------|--------------------------------------|
-| GET    | `/api/fleet/status`              | Estado general de la flota ⭐        |
-| GET    | `/api/fleet/gps`                 | Todos los mensajes GPS               |
-| GET    | `/api/fleet/gps/{vehiculoId}`    | GPS de un vehículo (ej: VH-001)     |
-| GET    | `/api/fleet/health`              | Health-check del servicio            |
-| GET    | `/h2-console`                    | Consola H2 (JDBC: `jdbc:h2:mem:fleetdb`) |
-
-```bash
-# Evidencia para la rúbrica
-curl http://localhost:8080/api/fleet/status
-```
-
-Paneles de administración:
-- **RabbitMQ**: http://localhost:15672 (admin / admin123)
-- **H2 Console**: http://localhost:8080/h2-console
+- **Interfaz No Negra**: Cambio total de estética a un "Light Mode" profesional con acentos en índigo.
+- **Backend Interactivo**: Implementación de Swagger UI para probar los endpoints en tiempo real.
+- **Unificación**: Eliminación de la dependencia de Java/Spring Boot para simplificar el despliegue en entornos Python.
+- **Monitor en Tiempo Real**: El script `status.sh` ahora permite interactuar y ver el estado de los servicios con colores vibrantes.
 
 ---
 
@@ -162,11 +129,11 @@ Los datos GPS pueden consumirlos simultáneamente el servicio de rutas, el dashb
 
 2. **RabbitMQ** aporta robustez empresarial: enrutamiento flexible con exchanges, colas durables, mensajes persistentes y gestión de prioridades.
 
-3. El patrón **Bridge** desacopla el mundo IoT del mundo de microservicios: el simulador no sabe nada de RabbitMQ, y Spring Boot no sabe nada de MQTT.
+3. El patrón **Bridge** desacopla el mundo IoT del mundo de microservicios: el simulador no sabe nada de RabbitMQ, y FastAPI no sabe nada de MQTT.
 
 4. El uso de **colas durables + mensajes persistentes** garantiza que ninguna alerta crítica se pierda ante fallos del broker.
 
-5. **Spring AMQP** simplifica enormemente la integración con RabbitMQ gracias a `@RabbitListener` y la configuración declarativa de exchanges/colas con beans de Spring.
+5. **FastAPI** simplifica la integración y ofrece una documentación de API automática, facilitando el desarrollo y la depuración del sistema de mensajería.
 
 ---
 

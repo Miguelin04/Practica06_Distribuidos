@@ -13,7 +13,7 @@
   <aside class="sidebar">
     <div class="logo">
       <span class="logo-icon">🚛</span>
-      <span class="logo-text">Fleet<b>Monitor</b></span>
+      <span class="logo-text">FLEET<b>PRO</b></span>
     </div>
     <nav class="nav">
       <a class="nav-item active" data-view="dashboard" onclick="showView('dashboard')">
@@ -41,10 +41,10 @@
     <header class="topbar">
       <div>
         <h1 id="view-title">Dashboard</h1>
-        <p class="subtitle">APE-05/06 — Monitoreo de Flota Logística en tiempo real</p>
+        <p class="subtitle">Logística Inteligente & Monitoreo en Tiempo Real</p>
       </div>
       <div class="topbar-right">
-        <span class="chip">MQTT → RabbitMQ → Spring Boot</span>
+        <span class="chip">MQTT → RabbitMQ → FastAPI</span>
         <span id="last-update" class="update-time">--</span>
         <button class="btn-refresh" onclick="fetchAll()">↻ Actualizar</button>
       </div>
@@ -111,7 +111,7 @@
           <button class="btn-sm" onclick="clearLog()">Limpiar</button>
         </div>
         <div class="log-box" id="live-log">
-          <p class="log-entry log-info">[SISTEMA] Esperando datos del pipeline MQTT → RabbitMQ → Spring Boot...</p>
+          <p class="log-entry log-info">[SISTEMA] Esperando datos del pipeline MQTT → RabbitMQ → FastAPI...</p>
         </div>
       </div>
     </section>
